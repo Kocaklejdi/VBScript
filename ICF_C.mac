@@ -1,0 +1,171 @@
+[PCOMM SCRIPT HEADER]
+LANGUAGE=VBSCRIPT
+DESCRIPTION=
+[PCOMM SCRIPT SOURCE]
+OPTION EXPLICIT
+autECLSession.SetConnectionByName(ThisSessionName)
+
+REM This line calls the macro subroutine
+subSub1_
+
+sub subSub1_()
+'Setting the first page + setting the window size____________________________________________________
+
+Dim FindObject
+Dim Current_Page
+Dim H_Windows, W_Windows
+Dim Maxim_Window
+Dim NetObject
+Dim UserN
+Dim Exc
+Dim Path
+Dim Getstarted
+Dim Function1
+Dim Row, Row_S, Row_2
+Dim Kod1, Kod2, Kod3, Kod4, Kod5, Kod6, Kod7
+Dim No1, No2, No3, No4
+Dim T(6)
+dim bl
+Dim objNetwork
+Dim Us
+Set objNetwork = CreateObject("WScript.Network")
+US = objNetwork.UserName
+Dim conn
+Dim Sysa
+Dim strConnect
+Dim Rs
+
+'Set Rs = Conn.Execute("Insert into [Tlo] ([Nort], [Vost]) Values ('" & US & "','ICF-Imp')")
+'Set Rs = Conn.Execute("Select Count(*) From [Dsx] Where [Rott]= '" & US & "'")
+'Sysa = Rs.fields(0).value
+'Conn.close
+Sysa = 1
+If Sysa > 0 Then
+Function1 = "ICF - Import"
+Getstarted = Msgbox ("Are you sure you want to start the function "& Function1 &"? ", Vbquestion + vbyesno," Sigip for Excel - Technical functions ")
+If Getstarted = vbyes then
+
+
+	Set NetObject = CreateObject("WScript.Network")
+	UserN = NetObject.UserName
+	Path = "C:\Users\koca\Desktop\Macro\SE-New.xlsm"
+
+'	H_Windows = autECLSession.autECLWinMetrics.Height
+'	W_Windows = autECLSession.autECLWinMetrics.width
+'	IF autECLSession.autECLWinMetrics.Maximized = True then
+'		Maxim_Window = true
+'	Else
+'		Maxim_Window = false
+'	End if
+'
+'	autECLSession.autECLWinMetrics.Height = 287
+'	autECLSession.autECLWinMetrics.width = 336
+'
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (10, 1) 
+	Current_Page = left(Trim(FindObject.GetText),9)
+
+	
+'-------------------------Otwarcie SE ----------------------------------------------
+	On Error resume next
+	
+	Set Exc = getobject(,"Excel.Application")
+	
+	If Err.Number <> 0 then
+		Set Exc = Createobject("Excel.Application")
+		Exc.Visible = TRUE
+	End if
+
+	
+	Exc.WorkBooks.open(Path)
+	Exc.Worksheets("DESCRIPTION_RYS").Activate
+'	Exc.WindowState =-4137
+	
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLSession.autECLPS.SendKeys "[pf1]"
+
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLConnMgr.autECLConnList.Refresh 
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (4, 9) 
+	FindObject.SetText ("ICF")
+
+	'autECLConnMgr.autECLConnList.Refresh 
+	'autECLSession.autECLPS.autECLFieldList.Refresh 
+	'Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (4, 78) 
+	'FindObject.SetText ("10")
+
+	Row = 3
+	Row_2 = 3
+	While Exc.Cells(Row, 1).Value <> ""
+		Kod1 = Exc.Cells(Row,1) 
+		autECLSession.autECLPS.WaitForAttrib 4,8,"10","3c",3,10000
+		autECLSession.autECLOIA.WaitForAppAvailable
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLConnMgr.autECLConnList.Refresh 
+		autECLSession.autECLPS.autECLFieldList.Refresh 
+		Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (21, 21) 
+		FindObject.SetText (Kod1)
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLSession.autECLPS.SendKeys "[enter]"
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLConnMgr.autECLConnList.Refresh 
+		autECLSession.autECLPS.autECLFieldList.Refresh 
+		Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (24, 2) 
+		No1 = FindObject.GetText
+		iF Left(No1,1) = "A" THEN
+			'Exc.Cells(Row, 2).Value = Kod1	
+			Exc.Cells(Row, 2).Value = "The code does not exist..."
+			'Exc.Cells(Row, 6).Select
+			'Row_2 = Row_2 +1
+		Else
+			Row_S = 6
+				autECLConnMgr.autECLConnList.Refresh 
+				autECLSession.autECLPS.autECLFieldList.Refresh 
+				Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (7, 13) 
+				Kod3 = FindObject.GetText
+				Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (6, 35) 
+				Kod2 = FindObject.GetText
+				Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (6, 13) 
+				Kod4 = FindObject.GetText
+
+				If Trim(Kod4) <>"" Then
+					Exc.Cells(Row, 2).Value = Trim(Kod4)
+
+					If InStr(1,UCASE(Kod2),"VEDI")> 0 then
+						Exc.Cells(Row, 3).Value = "VEDI NOTA"
+						Exc.Cells(Row, 2).Value = Exc.Cells(Row, 2).Value & "-VEDI NOTA"
+						Exc.Cells(Row, 3).interior.color = RGB(255,0,0)
+					ELSE
+						If Trim(Kod3) <>"" and Kod3 <> Kod4 then
+							Exc.Cells(Row, 3).Value = "More than one"
+							Exc.Cells(Row, 2).Value = Exc.Cells(Row, 2).Value 
+							Exc.Cells(Row, 3).interior.color = RGB(255,0,0)
+						Else
+							Exc.Cells(Row, 3).Value = "Imported"
+						end if
+					End if
+				End if
+				Row_S = Row_S + 1
+			autECLSession.autECLOIA.WaitForAppAvailable
+			autECLSession.autECLOIA.WaitForInputReady
+			autECLSession.autECLOIA.WaitForInputReady
+			autECLSession.autECLPS.SendKeys "[pf12]"
+		End if
+		Row = Row +1
+	Wend
+
+'------------------Restore window--------------------------------
+'	autECLSession.autECLWinMetrics.Height = H_Windows
+'	autECLSession.autECLWinMetrics.width = W_Windows
+'	IF Maxim_Window = true then
+'		autECLSession.autECLWinMetrics.Maximized = True 
+'	End if
+End if
+Msgbox "Function complete! "& vbnewline &" It is safe to continue working " & vbnewline &" JEPI 5000 LEK ANDIT ", vbinformation , "Finish"
+End if
+end sub
+

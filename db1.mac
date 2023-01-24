@@ -1,0 +1,138 @@
+[PCOMM SCRIPT HEADER]
+LANGUAGE=VBSCRIPT
+DESCRIPTION=
+[PCOMM SCRIPT SOURCE]
+OPTION EXPLICIT
+autECLSession.SetConnectionByName(ThisSessionName)
+
+REM This line calls the macro subroutine
+subSub1_
+
+sub subSub1_()
+'Setting the first page + setting the window size____________________________________________________
+
+Dim FindObject
+Dim Current_Page
+Dim H_Windows, W_Windows
+Dim Maxim_Window
+Dim NetObject
+Dim UserN
+Dim Exc
+Dim Path
+Dim Getstarted
+Dim Function1
+Dim Row, Row_S, Row_2
+Dim Kod1, Kod2, Kod3, Kod4, Kod5, Kod6, Kod7
+Dim No1, No2, No3, No4
+Dim T(6)
+dim bl
+Dim objNetwork
+Dim Us
+Set objNetwork = CreateObject("WScript.Network")
+US = objNetwork.UserName
+Dim conn
+Dim Sysa
+Dim strConnect
+Dim Rs
+Dim col
+
+
+'Set Rs = Conn.Execute("Insert into [Tlo] ([Nort], [Vost]) Values ('" & US & "','ICF-Imp')")
+'Set Rs = Conn.Execute("Select Count(*) From [Dsx] Where [Rott]= '" & US & "'")
+'Sysa = Rs.fields(0).value
+'Conn.close
+Sysa=1
+If Sysa > 0 Then
+Function1 = "ICF - Importing"
+Getstarted = Msgbox ("Are you sure you want to start the function "& Function1 &"? ", Vbquestion + vbyesno," Sigip for Excel - Technical functions ")
+If Getstarted = vbyes then
+
+
+	Set NetObject = CreateObject("WScript.Network")
+	UserN = NetObject.UserName
+	Path = "C:\Users\koca\Desktop\Macro\Book1.xlsx"
+
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (10, 1) 
+	Current_Page = left(Trim(FindObject.GetText),9)
+
+
+'-------------------------Otwarcie SE ----------------------------------------------
+	On Error resume next
+	
+	Set Exc = getobject(,"Excel.Application")
+	
+	If Err.Number <> 0 then
+		Set Exc = Createobject("Excel.Application")
+		Exc.Visible = TRUE
+	End if
+	col = 2
+	Row_2 = 2
+	
+	While Exc.Cells(1, col).Value <> ""
+	
+	Exc.WorkBooks.open(Path)
+	Exc.Worksheets("DESCRIPTION_RYS").Activate
+
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLConnMgr.autECLConnList.Refresh 
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (21, 9) 
+	FindObject.SetText ("DB")
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (21, 12) 
+	FindObject.SetText ("1")
+	
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLSession.autECLPS.SendKeys "[enter]"
+	
+
+	
+	Kod1 = Exc.Cells(1,col).Value
+		autECLSession.autECLOIA.WaitForAppAvailable
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLConnMgr.autECLConnList.Refresh 
+		autECLSession.autECLPS.autECLFieldList.Refresh 
+		Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (5, 25) 
+		FindObject.SetText (Kod1)
+		Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (9, 25) 
+		FindObject.SetText ("C")
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLSession.autECLPS.SendKeys "[enter]"
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLConnMgr.autECLConnList.Refresh 
+		autECLSession.autECLPS.autECLFieldList.Refresh 
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLSession.autECLPS.SendKeys "[pf6]"
+		
+		While Exc.Cells(Row_2,col).Value <> ""
+			Kod7 = Exc.Cells(Row_2,col).Value
+			Kod6 = Exc.Cells(Row_2,col+1).Value
+			Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (4, 29) 
+			FindObject.SetText (Kod7)
+			Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (10, 29) 
+			FindObject.SetText (Kod6)
+			autECLSession.autECLOIA.WaitForInputReady
+			autECLConnMgr.autECLConnList.Refresh 
+			autECLSession.autECLPS.autECLFieldList.Refresh 
+			autECLSession.autECLPS.SendKeys "[enter]"
+			Row_2 = Row_2 + 1
+		Wend
+		Row_2 = 2
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLSession.autECLPS.SendKeys "[pf12]"
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLSession.autECLPS.SendKeys "[pf12]"
+		autECLSession.autECLOIA.WaitForInputReady
+		autECLSession.autECLPS.SendKeys "[pf12]"
+		col = col + 2 
+	Wend
+
+'------------------Przywracanie okna--------------------------------
+End if
+Msgbox "Function complete! "& vbnewline &" It is safe to continue working " , vbinformation , "Finish"
+End if
+end sub
+

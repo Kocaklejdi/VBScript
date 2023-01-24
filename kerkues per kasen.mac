@@ -1,0 +1,120 @@
+[PCOMM SCRIPT HEADER]
+LANGUAGE=VBSCRIPT
+DESCRIPTION=
+[PCOMM SCRIPT SOURCE]
+OPTION EXPLICIT
+autECLSession.SetConnectionByName(ThisSessionName)
+
+REM This line calls the macro subroutine
+subSub1_
+
+sub subSub1_()
+'Setting the first page + setting the window size____________________________________________________
+
+Dim FindObject
+Dim Current_Page
+Dim H_Windows, W_Windows
+Dim Maxim_Window
+Dim NetObject
+Dim UserN
+Dim Exc
+Dim Path
+Dim Getstarted
+Dim Function1
+Dim Row, Row_S, Row_2
+Dim Kod1, Kod2, Kod3, Kod4, Kod5, Kod6, Kod7
+Dim No1, No2, No3, No4
+Dim T(6)
+dim bl
+Dim objNetwork
+Dim Us
+Set objNetwork = CreateObject("WScript.Network")
+US = objNetwork.UserName
+Dim conn
+Dim Sysa
+Dim strConnect
+Dim Rs
+Dim col
+Dim kasa1,rowkasa
+Dim counter
+
+Sysa=1
+If Sysa > 0 Then
+Function1 = "ICF - Importing"
+Getstarted = Msgbox ("Are you sure you want to start the function "& Function1 &"? ", Vbquestion + vbyesno," Sigip for Excel - Technical functions ")
+If Getstarted = vbyes then
+
+
+	Set NetObject = CreateObject("WScript.Network")
+	UserN = NetObject.UserName
+	Path = "C:\Users\koca\Desktop\Macro\Book20.xlsx"
+
+'-------------------------Otwarcie SE ----------------------------------------------
+	On Error resume next
+	
+	Set Exc = getobject(,"Excel.Application")
+	
+	If Err.Number <> 0 then
+		Set Exc = Createobject("Excel.Application")
+		Exc.Visible = TRUE
+	End if
+
+	
+	Exc.WorkBooks.open(Path)
+	Exc.Worksheets("DESCRIPTION_RYS").Activate
+	
+	row = 5
+	rowkasa = 8
+	counter = 8
+	while exc.cells(row,2).value <> ""
+	autECLSession.autECLOIA.WaitForAppAvailable
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLConnMgr.autECLConnList.Refresh 
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	autECLSession.autECLPS.SendKeys "[pf1]"
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (4, 9) 
+	FindObject.SetText ("EL")
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (6, 21) 
+	Kod3 = exc.cells(row,2).value
+	FindObject.SetText(Kod3)
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLSession.autECLPS.SendKeys "[enter]"
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	autECLSession.autECLOIA.WaitForInputReady
+	'Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (8, 9)
+	While counter < 15
+		autECLSession.autECLPS.autECLFieldList.Refresh 
+		autECLSession.autECLOIA.WaitForInputReady
+		Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (rowkasa, 8)
+		kasa1 = FindObject.GetText
+		exc.cells(row,rowkasa+1).value = trim(kasa1)
+		rowkasa = rowkasa + 1
+		counter = counter + 1
+	wend
+	Set FindObject = autECLSession.autECLPS.autECLFieldList.FindFieldByRowCol (8, 49)
+	kasa1 = FindObject.GetText
+	if left(trim(kasa1),1) = 0 then
+	exc.cells(row,14).value = RIGHT(trim(kasa1),6)/1000
+
+	else
+		exc.cells(row,14).value = trim(kasa1)/1000
+	end if
+	counter = 8
+	rowkasa = 8
+	row = row + 1
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLSession.autECLPS.SendKeys "[pf12]"
+	autECLSession.autECLPS.autECLFieldList.Refresh 
+	autECLSession.autECLOIA.WaitForInputReady
+	autECLSession.autECLPS.SendKeys "[pf12]"
+	wend
+
+End if
+Msgbox "Function complete! "& vbnewline &" It is safe to continue working " , vbinformation , "Finish"
+End if
+end sub
+
